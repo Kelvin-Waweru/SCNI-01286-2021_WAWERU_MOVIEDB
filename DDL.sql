@@ -1,4 +1,5 @@
 -- SQL is divided into 3 parts
+-- DML DDL DCL
 -- DDL Data Definition Language - Responsible for creating managing and deleting database elements
 -- CREATE ,ALTER,DROP
 
