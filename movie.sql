@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 15, 2024 at 10:53 AM
+-- Generation Time: Jul 16, 2024 at 11:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -51,10 +51,11 @@ CREATE TABLE `directors` (
   `D.O.B` date DEFAULT NULL,
   `passport_photo` varchar(50) DEFAULT NULL,
   `added_by` int(11) DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `date_deleted` datetime DEFAULT NULL,
-  `deleted_by` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `deleted_by` int(11) DEFAULT NULL,
+  `gender` varchar(6) DEFAULT NULL
+) ;
 
 -- --------------------------------------------------------
 
@@ -66,10 +67,11 @@ CREATE TABLE `genres` (
   `genreId` int(11) NOT NULL,
   `genrename` varchar(50) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT NULL,
+  `deleted` varchar(3) DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL,
-  `datedeleted` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `datedeleted` datetime DEFAULT NULL,
+  `rated` int(11) DEFAULT NULL
+) ;
 
 -- --------------------------------------------------------
 
@@ -82,10 +84,10 @@ CREATE TABLE `languages` (
   `languagename` varchar(50) NOT NULL,
   `dateadded` datetime NOT NULL,
   `addedby` int(11) NOT NULL,
-  `deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime NOT NULL,
   `deletedby` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -102,10 +104,10 @@ CREATE TABLE `movies` (
   `cover` varchar(50) NOT NULL,
   `dateadded` datetime NOT NULL,
   `addedby` int(11) NOT NULL,
-  `deleted` tinyint(1) DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -122,10 +124,10 @@ CREATE TABLE `movie_cast` (
   `castname` varchar(50) NOT NULL,
   `dateadded` datetime NOT NULL,
   `addedby` int(11) NOT NULL,
-  `deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime NOT NULL,
   `deletedby` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -138,10 +140,10 @@ CREATE TABLE `movie_genres` (
   `genreId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -155,10 +157,10 @@ CREATE TABLE `movie_languages` (
   `languageId` int(11) NOT NULL,
   `dateadded` datetime NOT NULL,
   `addedby` int(11) NOT NULL,
-  `deleted` tinyint(1) NOT NULL,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime NOT NULL,
   `deletedby` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -171,10 +173,10 @@ CREATE TABLE `movie_production_companies` (
   `companyId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT NULL,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -185,10 +187,10 @@ CREATE TABLE `movie_production_companies` (
 CREATE TABLE `movie_resolution` (
   `movieId` int(11) NOT NULL,
   `resolutionId` int(11) DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT NULL,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -198,8 +200,9 @@ CREATE TABLE `movie_resolution` (
 
 CREATE TABLE `nationalities` (
   `countryId` int(11) NOT NULL,
-  `countryname` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `countryname` varchar(50) DEFAULT NULL,
+  `movie_status` varchar(10) DEFAULT NULL
+) ;
 
 -- --------------------------------------------------------
 
@@ -225,10 +228,10 @@ CREATE TABLE `ratings` (
   `ratingid` int(11) NOT NULL,
   `value` int(11) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -241,10 +244,10 @@ CREATE TABLE `resolution` (
   `resolutionname` varchar(50) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -256,11 +259,11 @@ CREATE TABLE `roles` (
   `roleId` int(11) NOT NULL,
   `rolename` varchar(50) NOT NULL,
   `dateadded` datetime NOT NULL,
-  `deleted` tinyint(1) NOT NULL DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `addedby` int(11) NOT NULL,
   `datedeleted` datetime NOT NULL,
   `deltedby` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
@@ -278,10 +281,10 @@ CREATE TABLE `stars` (
   `photo` varchar(1000) NOT NULL,
   `alist` tinyint(1) NOT NULL DEFAULT 0,
   `addedby` int(11) DEFAULT NULL,
-  `deleted` tinyint(1) DEFAULT 0,
+  `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 -- --------------------------------------------------------
 
