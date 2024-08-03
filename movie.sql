@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 01, 2024 at 09:42 AM
+-- Generation Time: Aug 03, 2024 at 06:05 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `movie`
 --
+CREATE DATABASE IF NOT EXISTS `movie` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `movie`;
 
 -- --------------------------------------------------------
 
@@ -27,15 +29,17 @@ SET time_zone = "+00:00";
 -- Table structure for table `audittrail`
 --
 
-CREATE TABLE `audittrail` (
-  `auditid` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `audittrail` (
+  `auditid` int(11) NOT NULL AUTO_INCREMENT,
   `tablename` varchar(50) DEFAULT NULL,
   `operation` varchar(50) DEFAULT NULL,
   `timestamp` time DEFAULT NULL,
   `userid` int(11) DEFAULT NULL,
   `recordid` int(11) DEFAULT NULL,
   `olddata` varchar(50) DEFAULT NULL,
-  `newdata` varchar(50) DEFAULT NULL
+  `newdata` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`auditid`),
+  KEY `userid` (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -44,8 +48,8 @@ CREATE TABLE `audittrail` (
 -- Table structure for table `directors`
 --
 
-CREATE TABLE `directors` (
-  `director_id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `directors` (
+  `director_id` int(11) NOT NULL AUTO_INCREMENT,
   `first_name` varchar(50) DEFAULT NULL,
   `last_name` varchar(50) DEFAULT NULL,
   `D.O.B` date DEFAULT NULL,
@@ -54,7 +58,10 @@ CREATE TABLE `directors` (
   `deleted` varchar(3) DEFAULT NULL,
   `date_deleted` datetime DEFAULT NULL,
   `deleted_by` int(11) DEFAULT NULL,
-  `gender` varchar(6) DEFAULT NULL
+  `gender` varchar(6) DEFAULT NULL,
+  KEY `deleted_by` (`deleted_by`),
+  KEY `added_by` (`added_by`),
+  KEY `director_id` (`director_id`)
 ) ;
 
 --
@@ -76,7 +83,16 @@ INSERT INTO `directors` (`director_id`, `first_name`, `last_name`, `D.O.B`, `pas
 (14, 'Christopher', 'Nolan', '1970-07-30', 'https://upload.wikimedia.org/wikipedia/commons/0/0', NULL, 'no', '0000-00-00 00:00:00', NULL, 'male'),
 (15, 'Greta', 'Gerwig', '1983-08-04', 'https://upload.wikimedia.org/wikipedia/commons/2/2', NULL, 'no', '0000-00-00 00:00:00', NULL, 'female'),
 (16, 'Spike', 'Lee', '1957-03-20', 'https://upload.wikimedia.org/wikipedia/commons/3/3', NULL, 'no', '0000-00-00 00:00:00', NULL, 'male'),
-(17, 'Sofia', 'Coppola', '1971-05-14', 'https://upload.wikimedia.org/wikipedia/commons/5/5', NULL, 'no', '0000-00-00 00:00:00', NULL, 'female');
+(17, 'Sofia', 'Coppola', '1971-05-14', 'https://upload.wikimedia.org/wikipedia/commons/5/5', NULL, 'no', '0000-00-00 00:00:00', NULL, 'female'),
+(18, 'Steven', 'Spielberg', '1946-12-18', 'https://upload.wikimedia.org/wikipedia/commons/8/8', NULL, 'no', '0000-00-00 00:00:00', NULL, 'male'),
+(19, 'Kathryn', 'Bigelow', '1951-11-27', 'https://upload.wikimedia.org/wikipedia/commons/2/2', NULL, 'no', '0000-00-00 00:00:00', NULL, 'female'),
+(20, 'Quentin', 'Tarantino', '1963-03-27', 'https://upload.wikimedia.org/wikipedia/commons/0/0', NULL, 'no', '0000-00-00 00:00:00', NULL, 'male'),
+(21, 'Ava', 'DuVernay', '1972-08-24', 'https://upload.wikimedia.org/wikipedia/commons/8/8', NULL, 'no', '0000-00-00 00:00:00', NULL, 'female'),
+(22, 'Martin', 'Scorsese', '1942-11-17', 'https://upload.wikimedia.org/wikipedia/commons/4/4', NULL, 'no', '0000-00-00 00:00:00', NULL, 'male'),
+(23, 'Christopher', 'Nolan', '1970-07-30', 'https://upload.wikimedia.org/wikipedia/commons/0/0', NULL, 'no', '0000-00-00 00:00:00', NULL, 'male'),
+(24, 'Greta', 'Gerwig', '1983-08-04', 'https://upload.wikimedia.org/wikipedia/commons/2/2', NULL, 'no', '0000-00-00 00:00:00', NULL, 'female'),
+(25, 'Spike', 'Lee', '1957-03-20', 'https://upload.wikimedia.org/wikipedia/commons/3/3', NULL, 'no', '0000-00-00 00:00:00', NULL, 'male'),
+(26, 'Sofia', 'Coppola', '1971-05-14', 'https://upload.wikimedia.org/wikipedia/commons/5/5', NULL, 'no', '0000-00-00 00:00:00', NULL, 'female');
 
 -- --------------------------------------------------------
 
@@ -84,14 +100,16 @@ INSERT INTO `directors` (`director_id`, `first_name`, `last_name`, `D.O.B`, `pas
 -- Table structure for table `genres`
 --
 
-CREATE TABLE `genres` (
-  `genreId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `genres` (
+  `genreId` int(11) NOT NULL AUTO_INCREMENT,
   `genrename` varchar(50) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
-  `rated` int(11) DEFAULT NULL
+  `rated` int(11) DEFAULT NULL,
+  PRIMARY KEY (`genreId`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 --
@@ -121,14 +139,17 @@ INSERT INTO `genres` (`genreId`, `genrename`, `dateadded`, `deleted`, `deletedby
 -- Table structure for table `languages`
 --
 
-CREATE TABLE `languages` (
-  `languageId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `languages` (
+  `languageId` int(11) NOT NULL AUTO_INCREMENT,
   `languagename` varchar(50) NOT NULL,
   `dateadded` datetime NOT NULL,
   `addedby` int(11) NOT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime NOT NULL,
-  `deletedby` int(11) NOT NULL
+  `deletedby` int(11) NOT NULL,
+  PRIMARY KEY (`languageId`),
+  KEY `addedby` (`addedby`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -137,8 +158,8 @@ CREATE TABLE `languages` (
 -- Table structure for table `movies`
 --
 
-CREATE TABLE `movies` (
-  `movieId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `movies` (
+  `movieId` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(50) NOT NULL,
   `releasedate` date NOT NULL,
   `runningtime` time NOT NULL,
@@ -148,7 +169,10 @@ CREATE TABLE `movies` (
   `addedby` int(11) NOT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `deletedby` int(11) DEFAULT NULL,
-  `datedeleted` datetime DEFAULT NULL
+  `datedeleted` datetime DEFAULT NULL,
+  PRIMARY KEY (`movieId`),
+  KEY `movies_ibfk_1` (`addedby`),
+  KEY `movies_ibfk_2` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -157,8 +181,8 @@ CREATE TABLE `movies` (
 -- Table structure for table `movie_cast`
 --
 
-CREATE TABLE `movie_cast` (
-  `castId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `movie_cast` (
+  `castId` int(11) NOT NULL AUTO_INCREMENT,
   `movieId` int(11) NOT NULL,
   `starId` int(11) NOT NULL,
   `roleId` int(11) NOT NULL,
@@ -168,8 +192,31 @@ CREATE TABLE `movie_cast` (
   `addedby` int(11) NOT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime NOT NULL,
-  `deletedby` int(11) NOT NULL
+  `deletedby` int(11) NOT NULL,
+  PRIMARY KEY (`castId`),
+  KEY `movieId` (`movieId`),
+  KEY `starId` (`starId`),
+  KEY `roleId` (`roleId`),
+  KEY `deletedby` (`deletedby`)
 ) ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `movie_categories`
+--
+
+CREATE TABLE IF NOT EXISTS `movie_categories` (
+  `categoryId` int(11) NOT NULL AUTO_INCREMENT,
+  `categoryname` varchar(50) DEFAULT NULL,
+  `description` varchar(1000) DEFAULT NULL,
+  `dateadded` datetime DEFAULT NULL,
+  `addedby` int(11) DEFAULT NULL,
+  `deleted` tinyint(1) DEFAULT NULL,
+  `datedeleted` datetime DEFAULT NULL,
+  `deletedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`categoryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -177,14 +224,18 @@ CREATE TABLE `movie_cast` (
 -- Table structure for table `movie_genres`
 --
 
-CREATE TABLE `movie_genres` (
-  `movieId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `movie_genres` (
+  `movieId` int(11) NOT NULL AUTO_INCREMENT,
   `genreId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
-  `deletedby` int(11) DEFAULT NULL
+  `deletedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`movieId`),
+  KEY `genreId` (`genreId`),
+  KEY `userId` (`userId`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -193,15 +244,21 @@ CREATE TABLE `movie_genres` (
 -- Table structure for table `movie_languages`
 --
 
-CREATE TABLE `movie_languages` (
-  `Id` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `movie_languages` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
   `movieId` int(11) NOT NULL,
   `languageId` int(11) NOT NULL,
   `dateadded` datetime NOT NULL,
   `addedby` int(11) NOT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime NOT NULL,
-  `deletedby` int(1) NOT NULL
+  `deletedby` int(1) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `Id` (`Id`),
+  KEY `movieId` (`movieId`),
+  KEY `languageId` (`languageId`),
+  KEY `addedby` (`addedby`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -210,14 +267,17 @@ CREATE TABLE `movie_languages` (
 -- Table structure for table `movie_production_companies`
 --
 
-CREATE TABLE `movie_production_companies` (
-  `movieId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `movie_production_companies` (
+  `movieId` int(11) NOT NULL AUTO_INCREMENT,
   `companyId` int(11) DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
-  `deletedby` int(11) DEFAULT NULL
+  `deletedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`movieId`),
+  KEY `userId` (`userId`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -226,12 +286,14 @@ CREATE TABLE `movie_production_companies` (
 -- Table structure for table `movie_resolution`
 --
 
-CREATE TABLE `movie_resolution` (
-  `movieId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `movie_resolution` (
+  `movieId` int(11) NOT NULL AUTO_INCREMENT,
   `resolutionId` int(11) DEFAULT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
-  `deletedby` int(11) DEFAULT NULL
+  `deletedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`movieId`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -240,10 +302,11 @@ CREATE TABLE `movie_resolution` (
 -- Table structure for table `nationalities`
 --
 
-CREATE TABLE `nationalities` (
-  `countryId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `nationalities` (
+  `countryId` int(11) NOT NULL AUTO_INCREMENT,
   `countryname` varchar(50) DEFAULT NULL,
-  `movie_status` varchar(10) DEFAULT NULL
+  `movie_status` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`countryId`)
 ) ;
 
 -- --------------------------------------------------------
@@ -252,12 +315,13 @@ CREATE TABLE `nationalities` (
 -- Table structure for table `priviledges`
 --
 
-CREATE TABLE `priviledges` (
-  `userId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `priviledges` (
+  `userId` int(11) NOT NULL AUTO_INCREMENT,
   `objectId` int(11) DEFAULT NULL,
   `valid` tinyint(1) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
-  `addedby` int(11) DEFAULT NULL
+  `addedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -266,13 +330,15 @@ CREATE TABLE `priviledges` (
 -- Table structure for table `ratings`
 --
 
-CREATE TABLE `ratings` (
-  `ratingid` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `ratings` (
+  `ratingid` int(11) NOT NULL AUTO_INCREMENT,
   `value` int(11) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
-  `deletedby` int(11) DEFAULT NULL
+  `deletedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ratingid`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -281,14 +347,17 @@ CREATE TABLE `ratings` (
 -- Table structure for table `resolution`
 --
 
-CREATE TABLE `resolution` (
-  `resolutionId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `resolution` (
+  `resolutionId` int(11) NOT NULL AUTO_INCREMENT,
   `resolutionname` varchar(50) DEFAULT NULL,
   `dateadded` datetime DEFAULT NULL,
   `userId` int(11) DEFAULT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
-  `deletedby` int(11) DEFAULT NULL
+  `deletedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`resolutionId`),
+  KEY `userId` (`userId`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -297,14 +366,15 @@ CREATE TABLE `resolution` (
 -- Table structure for table `roles`
 --
 
-CREATE TABLE `roles` (
+CREATE TABLE IF NOT EXISTS `roles` (
   `roleId` int(11) NOT NULL,
   `rolename` varchar(50) NOT NULL,
   `dateadded` datetime NOT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `addedby` int(11) NOT NULL,
   `datedeleted` datetime NOT NULL,
-  `deltedby` int(11) NOT NULL
+  `deltedby` int(11) NOT NULL,
+  KEY `addedby` (`addedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -313,8 +383,8 @@ CREATE TABLE `roles` (
 -- Table structure for table `stars`
 --
 
-CREATE TABLE `stars` (
-  `starId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `stars` (
+  `starId` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(50) NOT NULL,
   `middlename` varchar(50) NOT NULL,
   `lastname` varchar(50) NOT NULL,
@@ -325,7 +395,11 @@ CREATE TABLE `stars` (
   `addedby` int(11) DEFAULT NULL,
   `deleted` varchar(3) DEFAULT NULL,
   `datedeleted` datetime DEFAULT NULL,
-  `deletedby` int(11) DEFAULT NULL
+  `deletedby` int(11) DEFAULT NULL,
+  PRIMARY KEY (`starId`),
+  KEY `nationalityId` (`nationalityId`),
+  KEY `addedby` (`addedby`),
+  KEY `deletedby` (`deletedby`)
 ) ;
 
 -- --------------------------------------------------------
@@ -334,8 +408,8 @@ CREATE TABLE `stars` (
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
-  `userId` int(11) NOT NULL,
+CREATE TABLE IF NOT EXISTS `users` (
+  `userId` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `firstname` varchar(50) NOT NULL,
   `lastname` varchar(50) NOT NULL,
@@ -346,8 +420,9 @@ CREATE TABLE `users` (
   `dateadded` date NOT NULL,
   `addedby` int(11) NOT NULL,
   `mobile` varchar(50) NOT NULL,
-  `email` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `email` varchar(50) NOT NULL,
+  PRIMARY KEY (`userId`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
@@ -384,241 +459,6 @@ INSERT INTO `users` (`userId`, `username`, `firstname`, `lastname`, `password`, 
 (28, 'bthompson', 'Brian', 'Thompson', 'password525', 'salt28', 0, 0, '2024-07-04', 0, '1234567817', 'bthompson@example.com'),
 (29, 'cgarcia', 'Carmen', 'Garcia', 'password626', 'salt29', 0, 0, '2024-07-03', 0, '1234567818', 'cgarcia@example.com'),
 (30, 'dlee', 'Daniel', 'Lee', 'password727', 'salt30', 0, 0, '2024-07-02', 0, '1234567819', 'dlee@example.com');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `audittrail`
---
-ALTER TABLE `audittrail`
-  ADD PRIMARY KEY (`auditid`),
-  ADD KEY `userid` (`userid`);
-
---
--- Indexes for table `directors`
---
-ALTER TABLE `directors`
-  ADD KEY `deleted_by` (`deleted_by`),
-  ADD KEY `added_by` (`added_by`),
-  ADD KEY `director_id` (`director_id`);
-
---
--- Indexes for table `genres`
---
-ALTER TABLE `genres`
-  ADD PRIMARY KEY (`genreId`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `languages`
---
-ALTER TABLE `languages`
-  ADD PRIMARY KEY (`languageId`),
-  ADD KEY `addedby` (`addedby`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `movies`
---
-ALTER TABLE `movies`
-  ADD PRIMARY KEY (`movieId`),
-  ADD KEY `movies_ibfk_1` (`addedby`),
-  ADD KEY `movies_ibfk_2` (`deletedby`);
-
---
--- Indexes for table `movie_cast`
---
-ALTER TABLE `movie_cast`
-  ADD PRIMARY KEY (`castId`),
-  ADD KEY `movieId` (`movieId`),
-  ADD KEY `starId` (`starId`),
-  ADD KEY `roleId` (`roleId`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `movie_genres`
---
-ALTER TABLE `movie_genres`
-  ADD PRIMARY KEY (`movieId`),
-  ADD KEY `genreId` (`genreId`),
-  ADD KEY `userId` (`userId`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `movie_languages`
---
-ALTER TABLE `movie_languages`
-  ADD PRIMARY KEY (`Id`),
-  ADD KEY `Id` (`Id`),
-  ADD KEY `movieId` (`movieId`),
-  ADD KEY `languageId` (`languageId`),
-  ADD KEY `addedby` (`addedby`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `movie_production_companies`
---
-ALTER TABLE `movie_production_companies`
-  ADD PRIMARY KEY (`movieId`),
-  ADD KEY `userId` (`userId`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `movie_resolution`
---
-ALTER TABLE `movie_resolution`
-  ADD PRIMARY KEY (`movieId`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `nationalities`
---
-ALTER TABLE `nationalities`
-  ADD PRIMARY KEY (`countryId`);
-
---
--- Indexes for table `priviledges`
---
-ALTER TABLE `priviledges`
-  ADD PRIMARY KEY (`userId`);
-
---
--- Indexes for table `ratings`
---
-ALTER TABLE `ratings`
-  ADD PRIMARY KEY (`ratingid`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `resolution`
---
-ALTER TABLE `resolution`
-  ADD PRIMARY KEY (`resolutionId`),
-  ADD KEY `userId` (`userId`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `roles`
---
-ALTER TABLE `roles`
-  ADD KEY `addedby` (`addedby`);
-
---
--- Indexes for table `stars`
---
-ALTER TABLE `stars`
-  ADD PRIMARY KEY (`starId`),
-  ADD KEY `nationalityId` (`nationalityId`),
-  ADD KEY `addedby` (`addedby`),
-  ADD KEY `deletedby` (`deletedby`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`userId`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `audittrail`
---
-ALTER TABLE `audittrail`
-  MODIFY `auditid` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `directors`
---
-ALTER TABLE `directors`
-  MODIFY `director_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `genres`
---
-ALTER TABLE `genres`
-  MODIFY `genreId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `languages`
---
-ALTER TABLE `languages`
-  MODIFY `languageId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `movies`
---
-ALTER TABLE `movies`
-  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `movie_cast`
---
-ALTER TABLE `movie_cast`
-  MODIFY `castId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `movie_genres`
---
-ALTER TABLE `movie_genres`
-  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `movie_languages`
---
-ALTER TABLE `movie_languages`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `movie_production_companies`
---
-ALTER TABLE `movie_production_companies`
-  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `movie_resolution`
---
-ALTER TABLE `movie_resolution`
-  MODIFY `movieId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `nationalities`
---
-ALTER TABLE `nationalities`
-  MODIFY `countryId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `priviledges`
---
-ALTER TABLE `priviledges`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `ratings`
---
-ALTER TABLE `ratings`
-  MODIFY `ratingid` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `resolution`
---
-ALTER TABLE `resolution`
-  MODIFY `resolutionId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `stars`
---
-ALTER TABLE `stars`
-  MODIFY `starId` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables
